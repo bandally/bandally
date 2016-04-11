@@ -7,6 +7,11 @@ import minifyCss from 'gulp-minify-css';
 import rename from 'gulp-rename';
 import sh from 'shelljs';
 import del from 'del';
+import browserify from 'browserify';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import transform from 'vinyl-transform';
+import babelify from 'babelify';
 
 const paths = {
   html: ['src/*.html', 'src/**/*.html'],
@@ -32,9 +37,18 @@ gulp.task('css', done => {
 });
 
 gulp.task('js', done => {
-  gulp.src(paths.js)
-    .pipe(gulp.dest('www/app/'))
-    .on('end', done);
+  return browserify({
+    entries: 'src/app/app.js',
+    debug  : true
+  })
+    .transform(babelify, {
+      presets: ['es2015']
+    })
+    .bundle()
+    .on('error', (err) => console.log(err.message))
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('www/app'));
 });
 
 gulp.task('img', done => {
