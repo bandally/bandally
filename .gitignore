@@ -7,5 +7,5 @@ plugins/
 
 www/
 src/lib
-src/app/config/env.dev.js
-src/app/config/env.prod.js
+src/app/core/config/server.dev.js
+src/app/core/config/server.prod.js

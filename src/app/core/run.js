@@ -1,7 +1,15 @@
-run.$inject = [];
+run.$inject = ['$ionicPlatform', 'serverData'];
 
-function run () {
-  console.log('okok');
+export default function run ($ionicPlatform, serverData) {
+
+  return activate();
+
+  function activate() {
+    parseInit();
+  }
+
+  function parseInit() {
+    Parse.initialize(serverData.appId);
+    Parse.serverURL = serverData.serverUrl;
+  }
 }
-
-export default run;
