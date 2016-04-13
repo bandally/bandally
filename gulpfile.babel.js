@@ -25,14 +25,14 @@ gulp.task('default', ['html', 'css', 'img', 'js', 'lib', 'watch']);
 
 gulp.task('html', done => {
   gulp.src(paths.html)
-    .pipe(gulp.dest('www/'))
+    .pipe(gulp.dest('server/public/'))
     .on('end', done);
 });
 
 gulp.task('css', done => {
   gulp.src(paths.css)
     .pipe(sass())
-    .pipe(gulp.dest('www/content/css/'))
+    .pipe(gulp.dest('server/public/content/css/'))
     .on('end', done);
 });
 
@@ -54,19 +54,19 @@ gulp.task('js', done => {
         })
         .on('error', (err) => console.log(err.message));
     }))
-    .pipe(gulp.dest('www/app'))
+    .pipe(gulp.dest('server/public/app'))
     .on('end', done);;
 });
 
 gulp.task('img', done => {
   gulp.src(paths.img)
-    .pipe(gulp.dest('www/content/img/'))
+    .pipe(gulp.dest('server/public/content/img/'))
     .on('end', done);
 });
 
 gulp.task('lib', done => {
   gulp.src(paths.lib)
-    .pipe(gulp.dest('www/lib/'))
+    .pipe(gulp.dest('server/public/lib/'))
     .on('end', done);
 });
 

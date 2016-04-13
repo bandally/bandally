@@ -5,7 +5,7 @@ node_modules/
 platforms/
 plugins/
 
-www/
+server/public
 src/lib
 src/app/core/config/server.dev.js
 src/app/core/config/server.prod.js

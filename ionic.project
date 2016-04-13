@@ -4,6 +4,7 @@
   "gulpStartupTasks": [
     "default"
   ],
+  "documentRoot": "server/public",
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*"
