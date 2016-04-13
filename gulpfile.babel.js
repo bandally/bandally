@@ -8,16 +8,16 @@ import rename from 'gulp-rename';
 import sh from 'shelljs';
 import del from 'del';
 import browserify from 'browserify';
-import source from 'vinyl-source-stream';
-import buffer from 'vinyl-buffer';
 import transform from 'vinyl-transform';
 import babelify from 'babelify';
+import plumber from 'gulp-plumber';
+import through2 from 'through2';
 
 const paths = {
   html: ['src/*.html', 'src/**/*.html'],
   css : ['src/content/scss/*.scss'],
   img : ['src/content/img/*.{png,jpg,gif}'],
-  js  : ['src/app/**/*.js', '!src/lib/**/*.js'],
+  js  : ['src/**/*.js', '!src/lib/**/*.js'],
   lib : ['src/lib/**']
 };
 
@@ -37,18 +37,25 @@ gulp.task('css', done => {
 });
 
 gulp.task('js', done => {
-  return browserify({
-    entries: 'src/app/app.js',
-    debug  : true
-  })
-    .transform(babelify, {
-      presets: ['es2015']
-    })
-    .bundle()
-    .on('error', (err) => console.log(err.message))
-    .pipe(source('app.js'))
-    .pipe(buffer())
-    .pipe(gulp.dest('www/app'));
+  gulp.src('src/app/app.js')
+    .pipe(plumber())
+    .pipe(through2.obj((file, encode, callback) => {
+      return browserify({
+        entries: file.path,
+        debug  : true
+      })
+        .transform(babelify, {
+          presets: ['es2015']
+        })
+        .bundle((err, res) => {
+          if (err) { return callback(err); }
+          file.contents = res;
+          callback(null, file);
+        })
+        .on('error', (err) => console.log(err.message));
+    }))
+    .pipe(gulp.dest('www/app'))
+    .on('end', done);;
 });
 
 gulp.task('img', done => {
